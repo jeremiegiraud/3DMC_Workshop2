@@ -1,0 +1,89 @@
+#----------- FILE PATHS
+[FilePaths]
+# Model of the area investigated. 
+model_filename = /content/drive/MyDrive/NullspaceNotebook/data/models/model_grid_example.txt
+
+# Perturbation that will be add to the model.
+perturbation_filename = /content/drive/MyDrive/NullspaceNotebook/data/models/delta_m_orig_example.txt
+
+# File containing the gravity data. 
+data_vals_filename = /content/drive/MyDrive/NullspaceNotebook/data/gravity_data/data_vals_example.txt
+
+# File containing the density response of the background model. 
+data_background_filename = /content/drive/MyDrive/NullspaceNotebook/data/gravity_data/data_background_example.txt
+
+# Path for the ouputs. 
+path_output = /content/drive/MyDrive/NullspaceNotebook/output_example
+
+# Path to the sensitivity matrix. 
+sensit_path = /content/drive/MyDrive/NullspaceNotebook/data/SENSIT_example_grav_compression/
+
+#----------- INFORMATION FOR PLOTS - NOT USED IN THE CALCULATION: optional. 
+# Path to geological or other reference model, used for plots only, to add a reference more for comparison [optional]. 
+geol_model_path = /content/drive/MyDrive/NullspaceNotebook/data/models/delta_m_orig_example.txt
+
+#----------- INFORMATION FOR PLOTS - NOT USED IN THE CALCULATION: optional. 
+# Path to rotation matrix [optional]
+# rotation_mat_filename = your_file
+
+# Path to geological or other reference model, used for plots only, to add a reference more for comparison [optional]. 
+# geol_model_path = your_file
+
+# Path to file containing the outline of the geophysical data [optional]. 
+data_outline_filename =  /content/drive/MyDrive/NullspaceNotebook/data/gravity_data/data_outline_example.txt
+
+
+#----------- SOLVER PARAMETERS
+[SolverParameters]
+# Type of sensitivity matrix and inversion: 'grav' (for gravity) or 'magn' (for magnetic).
+sensit_type = grav
+
+# Number of processors used to calculate the sensitivity kernel (with Tomofast-x inversion platform).
+tomofast_sensit_nbproc = 5
+
+# Flag defining whether we rotate the data (for plotting only).
+use_rotation_matrix = False
+
+# Flag on unit conversion of the input gravity data (apply a 1e2 factor to do mGal).
+unit_conv = True
+
+# Flag on whether we use a mask to reduce the domain where modifications of the model are allowed.
+use_mask_domain = False
+
+# Tolerance on misfit variations during null space navigation.
+eps = 4.e-4
+
+# Maximum difference between the first model of navigation and the current model (in kg/m^3).
+max_change = 200
+
+# Maximum number of time steps (= modifications of the model).
+num_epochs = 300
+
+# Length of a time step (scales the perturbation at each iteration: small time_step = small perturbation).
+time_step = 1000.
+
+# Weight of prior model term in cost function. (Negative: larger departures from the original model, Positive: smaller variations. Depth weight can be used here.)
+weight_prior_model = 0.
+
+#------------ GRID PARAMETERS
+[GridParameters]
+# Dimensions of the mesh
+nx = 22
+ny = 147
+nz = 39 
+
+#------------- PREPROCESSING PARAMETERS
+[PreProcessingParameters]
+# Index of rock unit (by increasing density value) to define the mask on perturbations (in paper: 9 = Mantle).
+ind_unit_mask = 1
+# Distance max in number of cells away from the outline of rock unit considered.
+distance_max = 4 
+
+#----------- SAVING OUTPUTS
+[SaveOutput]
+# Flag controlling whether plots will be saved. 
+save_plots = True
+# Flag controlling whether intermediate results will be saved.
+save_intermediate_plots = True
+# Interval at which intermediate results will be saved.
+interval_intermediate_plots = 20
