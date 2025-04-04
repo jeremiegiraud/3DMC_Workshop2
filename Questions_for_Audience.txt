@@ -1,0 +1,41 @@
+Tentative list of questions to ask through Slido.
+
+1. At the beginning
+
+--> BAR CHART: Audience Background. 
+	What best describes you: 
+	- geologists 
+	- engineer
+	- mathematician
+	- geophysicist
+	- other (add your own)
+	
+--> BAR CHART: Audience occupation. 
+	- Academia
+	- Industry
+	- Student
+	- Other
+
+--> WORD CLOUD: What scientific aspects of the workshop are you most interested in?
+
+--> BAR CHART: "What do you hope to gain from this course? Choose up to 3 options or enter your own."
+	- Learn new methods
+	- Improve practical skills
+	- Network with peers
+	- Understand industry trends
+	- Deepen theoretical knowledge
+
+2. At the end
+
+--> BAR CHART: "Were there too many slides?" 
+
+--> BAR CHART: "Were there too many equations?"
+
+--> BAR CHART: "Was there too little practice?"
+
+--> WORD CLOUD: "What would you do differently to improve this course?"
+
+--> WORD CLOUD: "What is one key takeaway or concept you learned today?"
+
+--> WORD CLOUD: "What topics would you like to see covered in future sessions?"
+
