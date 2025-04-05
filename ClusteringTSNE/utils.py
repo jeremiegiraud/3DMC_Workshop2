@@ -1,5 +1,3 @@
-import os
-import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 from os import path
@@ -37,21 +35,6 @@ def calc_models_misfit(model_ref, models_eval, n_models=0):
         misfit_model = calc_rms_misfit(model_ref, models_eval)
 
     return misfit_model
-
-
-def get_prefix_filename(rt_file_name_):
-
-    if len(rt_file_name_) == 1:
-        file_prefix = rt_file_name_[0].split("\\")[-1]
-        print('\n Doing for run: ', file_prefix)
-    else:
-        extracted_digits = [extract_digits(s) for s in rt_file_name_]
-        filen_name_id = 'files_id_'
-        for digits in extracted_digits:
-            filen_name_id += '_' + digits
-        file_prefix = filen_name_id
-
-    return file_prefix
 
 
 # Function to check if two plots overlap
@@ -185,44 +168,6 @@ def get_core_indices(X, labels):
         core_indices = np.append(core_indices, class_index)
 
     return core_indices
-
-
-def extract_digits(s):
-    """ Extract the digits at the end of a string. """
-    match = re.search(r'\d{1,4}$', s)
-    return match.group() if match else None
-
-
-def save_plot(fig=None, filename='myplot', extension='.png', dpi=300, save=False):
-    """
-    Save the current figure to file or the figure provided in argument.
-
-    :param: filename (str): The name of the output file.
-    :param: dpi (int): Dots per inch (resolution) of the saved image (default: 300).
-    :param: format (str): The format of the output file (default: 'png').
-    :param: save (bool): Flag to indicate whether to save the plot (default: True).
-
-    Returns: None
-    """
-
-    filename = filename + extension
-
-    if save:
-
-        # Check that the extension provided is OK.
-        _, ext = path.splitext(filename)
-        ext_lower = ext.lower()
-
-        valid_extensions = ['.png', '.jpg', '.jpeg', '.svg', '.pdf']
-        if ext_lower not in valid_extensions:
-            raise ValueError("Invalid file extension. Supported extensions are: " + ", ".join(valid_extensions))
-
-        if fig is None:
-            # Get the current figure.
-            fig = plt.gcf()
-
-        # Do the saving;
-        fig.savefig(filename, dpi=dpi, format=ext_lower[1:])
 
 
 def print_info_clusters(labels, show=True):
@@ -468,114 +413,6 @@ def rescale_vector(vector):
     rescaled_vector = (vector - min_val) / (max_val - min_val)
 
     return rescaled_vector
-
-
-def calculate_adj_mat(model1):
-    """
-    Modified by JG from a script developped by Vitaliy Ogarko and Jeremie Giraud to test a topological adjancency matrix
-    Jaccard index to compare pairs of models.
-
-    Input:
-    model1: 3D model - the model values are categorical, e.g., lithology type, unit type etc.
-
-    Output:
-    Resulting adjacency matrix.
-
-    TODO: remove for workshop.
-    """
-
-    if not model1.ndim == 3:
-        raise ValueError("The model should be 3D!")
-
-    nx, ny, nz = np.shape(model1)
-
-    def get_search_window(ind, size, ind_max):
-        """
-        Returns the min/max indexes for a search window of a given size around a given index.
-        """
-
-        left = max(ind - size, 0)
-        right = min(ind + size, ind_max - 1)
-        return left, right
-
-    def get_all_neighbour_cells(ic, jc, kc, n_x, n_y, n_z):
-        """
-        Returns the 3D indexes of all neighbouring cells around a given cell.
-        Takes into account the model boundary.
-        """
-
-        # Define the search window.
-        ii_start, ii_end = get_search_window(ic, 1, n_x)
-        jj_start, jj_end = get_search_window(jc, 1, n_y)
-        kk_start, kk_end = get_search_window(kc, 1, n_z)
-
-        # Get list of indices from loop over neighbouring cells.
-        cells = list((ii, jj, kk)
-                     for ii in range(ii_start, ii_end + 1)
-                     for jj in range(jj_start, jj_end + 1)
-                     for kk in range(kk_start, kk_end + 1)
-                     # Skipping the central cell.
-                     if (ii != ic or jj != jc or kk != kc)
-                     )
-        return cells
-
-    def build_adj_matrix(model, rock_A, cells, nlithos):
-        """
-        Returns the adjacency matrix between the rock_A and the rocks in the given cells.
-        """
-
-        adj_matrix = np.zeros(shape=(nlithos, nlithos), dtype=float)
-        # Loop over neighbouring cells.
-        for cell in cells:
-            # Define the rock B.
-            rock_B = model[cell[0], cell[1], cell[2]]
-            # Add contact to the matrix.
-            if (rock_A <= rock_B):
-                adj_matrix[rock_A, rock_B] += 1.
-            else:
-                adj_matrix[rock_B, rock_A] += 1.
-        return adj_matrix
-
-    # Count the total number of lithos.
-    lithos1 = np.unique(model1)
-    nlithos = len(lithos1)
-
-    adj_matrix = np.zeros(shape=(nlithos, nlithos), dtype=float)
-
-    # Loop over all model cells.
-    for i in range(nx):
-        for j in range(ny):
-            for k in range(nz):
-                # Define the rock A.
-                rock1_A = model1[i, j, k]
-
-                # Get all neighbouring cells.
-                cells = get_all_neighbour_cells(i, j, k, nx, ny, nz)
-
-                # Building the adjacency matrix.
-                adj_matrix_tmp = build_adj_matrix(model1, rock1_A, cells, nlithos)
-                adj_matrix = adj_matrix + adj_matrix_tmp
-
-    return adj_matrix
-
-
-def get_upper_triangular(matrix):
-    """
-    From the input square matrix, extracts the upper triangle including the diagonal and returns its vectorized form.
-    """
-
-    # Start with sanity check: check that the matrix is square.
-    rows, cols = matrix.shape
-    if not rows == cols:
-        raise ValueError("The matrix is not square!")
-
-    # Extract the upper triangular part of the input (square) matrix (including the diagonal).
-    upper_triangular_indices = np.triu_indices(matrix.shape[0])
-
-    # Vectorize.
-    upper_triangular_vector = matrix[upper_triangular_indices]
-
-    return upper_triangular_vector
 
 
 def plot_clust_colors(X, labels, probabilities=None, parameters=None, ground_truth=False, ax=None):
