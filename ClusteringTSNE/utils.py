@@ -284,7 +284,7 @@ def plot_tsne_clusters(clustered_dataset, labels, core_sample_indices, title="Ta
         n_plots = 4
     else:
         n_plots = 1
-    fig, ax = plt.subplots(nrows=1, ncols=n_plots, figsize=(10, 6), dpi=600)
+    fig, ax = plt.subplots(nrows=1, ncols=n_plots, figsize=(6.66, 4), dpi=600)
 
     fig.suptitle(title, fontsize=10)
 
